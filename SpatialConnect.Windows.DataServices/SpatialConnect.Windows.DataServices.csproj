@@ -80,7 +80,6 @@
     <Compile Include="Service\ServiceActivity.cs" />
     <Compile Include="Service\RecordCaptureService.cs" />
     <Compile Include="Service\RecordPushService.cs" />
-    <Compile Include="Util\ServiceUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
