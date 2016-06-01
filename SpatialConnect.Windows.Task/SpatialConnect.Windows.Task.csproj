@@ -92,7 +92,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="Properties\app.manifest" />
     <None Include="SpatialConnect.Windows.Task_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
