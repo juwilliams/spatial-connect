@@ -24,6 +24,8 @@ The system is a tool designed to help migrate data between systems, specifically
 1. Clone the repositories mentioned above (Spatial Connect, Spatial Connect CLI, GeoServices)
 2. Build all of the libraries from source
 3. Open Spatial Connect and ensure that all library references are ok, include/update anything that is missing or broken 
+	* During this step you will need to update the references for several ESRI.* libraries. These are installed with the ArcObjects SDK and can typically be found at this path on Windows 
+	`C:\Program Files (x86)\ArcGIS\DeveloperKit10.4\DotNet\`
 4. Use <a href="https://www.github.com/spatial-connect-cli">Spatial Connect CLI</a> to initialize a connect space and create a container
 5. Rename the Example-App.config in the Spatial.Connect.Task project to App.config and populate the following:
 	* app.settings > app-path : this should be the direct path to the directory created in step 4.
