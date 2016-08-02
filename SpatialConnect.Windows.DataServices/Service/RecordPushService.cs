@@ -95,7 +95,7 @@ namespace SpatialConnect.Windows.DataServices.Service
                 }
 
                 //  push the concatenated record lists
-                switch (this.Container.destination)
+                switch (this.Container.destination.ToLower())
                 {
                     case "webeoc":
                         {
