@@ -10,7 +10,16 @@ The system is a tool designed to help migrate data between systems, specifically
 ## Requirements
 * ArcObjects SDK v10+, available with an ArcGIS Engine license or EDN Subscription
 * Desktop running Microsoft Windows 7 or greater
-
+* The following ESRI ArcObjects SDK Binaries:
+	- ESRI.ArcGIS.DataSourcesFile.dll
+	- ESRI.ArcGIS.DataSourcesGDB.dall
+	- ESRI.ArcGIS.Display.dll
+	- ESRI.ArcGIS.GeoDatabase.dll
+	- ESRI.ArcGIS.Geometry.dll
+	- ESRI.ArcGIS.Server.dll
+	- ESRI.ArcGIS.System.dll
+	- ESRI.ArcGIS.SystemUI.dll
+	- ESRI.ArcGIS.Version.dll
 
 ## Capabilities
 * Data Archiving in flat file format (JSON)
@@ -33,6 +42,11 @@ The system is a tool designed to help migrate data between systems, specifically
 6. Create two Windows Scheduled Tasks, one for push and one for pull.
 	* Push and Pull tasks should reference the executable built from the Spatial.Connect.Task project. Additionally they should supply either 'push' or 'pull' as an input argument to indicate their purpose to the executable.
 7. Run the schedule tasks. Notifications of service actions will be logged to log.txt inside the /log folder found inside the directory created in step 4.
+
+## Alternative 'Getting Started'
+Alternatively, you can simply clone <a href="
+https://github.com/juwilliams/spatial-connect/tree/master/SpatialConnect.Windows.Task/bin/Release">SpatialConnect Task Release</a> for the latest and drop your ESRI binaries into the folder (files mentioned in step 3 above). The required binaries are listed above under 'Requirements'.
+
 
 
 

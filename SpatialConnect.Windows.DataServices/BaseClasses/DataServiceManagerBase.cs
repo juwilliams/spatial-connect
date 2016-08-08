@@ -49,8 +49,6 @@ namespace SpatialConnect.Windows.DataServices.BaseClasses
             {
                 Thread.Sleep(1000);
             }
-
-            _log.Info("No containers registered in scheduler service queue. Stopping run.");
         }
 
         #endregion
