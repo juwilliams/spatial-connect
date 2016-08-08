@@ -44,8 +44,7 @@ The system is a tool designed to help migrate data between systems, specifically
 7. Run the schedule tasks. Notifications of service actions will be logged to log.txt inside the /log folder found inside the directory created in step 4.
 
 ## Alternative 'Getting Started'
-Alternatively, you can simply clone <a href="
-https://github.com/juwilliams/spatial-connect/tree/master/SpatialConnect.Windows.Task/bin/Release">SpatialConnect Task Release</a> for the latest and drop your ESRI binaries into the folder (files mentioned in step 3 above). The required binaries are listed above under 'Requirements'.
+Alternatively, you can simply clone <a href="https://github.com/juwilliams/spatial-connect/tree/master/SpatialConnect.Windows.Task/bin/Release">SpatialConnect Task Release</a> for the latest and drop your ESRI binaries into the folder (files mentioned in step 3 above). The required binaries are listed above under 'Requirements'.
 
 
 
