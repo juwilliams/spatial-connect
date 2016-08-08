@@ -43,10 +43,10 @@ namespace SpatialConnect.Windows.DataServices.Service
 
         public void Run()
         {
-            _log.Debug("SpatialContainer push starting: " + this.Container.name);
-
             try
             {
+                _log.Info("push starting for... " + Container.name);
+
                 //  if this container is updating only, and we dont have any established relationship keys, no need to push
                 //  populate data ids if relationships are being used
                 if (this.Container.update_only && 
@@ -111,13 +111,13 @@ namespace SpatialConnect.Windows.DataServices.Service
                         }
                     default:
                         {
-                            throw new Exception("No known destination for records specified in container configuration. Aborting");
+                            throw new Exception("no known destination for records specified in container configuration, cannot continue..");
                         }
                 }
             }
             catch (Exception ex)
             {
-                _log.Error("Error during service run");
+                _log.Error("error during push!");
                 _log.Error(ex.Message, ex);
 
                 this.AfterRun(null);
@@ -152,6 +152,8 @@ namespace SpatialConnect.Windows.DataServices.Service
                 //  save the history
                 this.Container.PushHistory.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\push\\history.json");
                 this.Container.Relationships.Write(ServiceApp.app_path + "\\" + (!string.IsNullOrEmpty(this.Container.relationships_dir) ? this.Container.relationships_dir : this.Container.name) + "\\relationships.json");
+
+                _log.Info("push complete!");
             }
             catch (Exception ex)
             {
@@ -170,7 +172,7 @@ namespace SpatialConnect.Windows.DataServices.Service
 
         private void PushToArcGIS(List<GeoRecord> records)
         {
-            _log.Debug("Updating ArcGIS");
+            _log.Info("communicating with arcgis...");
 
             SDEManager sdeManager = new SDEManager(this.Container.Config);
 
@@ -181,13 +183,13 @@ namespace SpatialConnect.Windows.DataServices.Service
                                      this.Container.wkid, 
                                      records);
 
-            _log.Warn("Got Update Result");
-
             this.AfterRun(updateResult.Affected);
         }
 
         private void PushToWebEOC(IEnumerable<IGeoRecord> records)
         {
+            _log.Info("communicating with webeoc...");
+
             WebEOCManager webEOCManager = new WebEOCManager(this.Container);
 
             UpdateResult updateResult =
@@ -196,8 +198,6 @@ namespace SpatialConnect.Windows.DataServices.Service
                                            records,
                                            this.Container.has_attachments,
                                            _worker);
-
-            _log.Info("Got Update Result");
 
             this.AfterRun(updateResult.Affected);
         }

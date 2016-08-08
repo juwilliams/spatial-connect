@@ -123,12 +123,12 @@ namespace SpatialConnect.Windows.DataServices.BaseClasses
 
         protected void ManagerWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            _log.Debug("SpatialContainer processing started");
-
             try
             {
                 while (!e.Cancel)
                 {
+                    _log.Debug("container worker staring.. ");
+
                     //  run the next item in the queue
                     if (_instance.ServiceQueue.Any(p => !p.Container.working))
                     {
@@ -141,6 +141,8 @@ namespace SpatialConnect.Windows.DataServices.BaseClasses
 
                     if (!_instance.ServiceQueue.Any())
                     {
+                        _log.Debug("container worker stopping..");
+
                         e.Cancel = true;
                     }
                 }
@@ -157,6 +159,8 @@ namespace SpatialConnect.Windows.DataServices.BaseClasses
                 _stoppedEvent = null;
 
                 this.IsStarted = false;
+
+                _log.Debug("container worker stopped!");
             }
         }
 
@@ -176,7 +180,7 @@ namespace SpatialConnect.Windows.DataServices.BaseClasses
                     this.ServiceQueue != null &&
                         this.ServiceQueue.Count < 1)
             {
-                _log.Info("No further containers to process. Shutting down.");
+                _log.Info("nothing else scheduled.. shutting down!");
 
                 this.Stop();
             }
@@ -196,20 +200,18 @@ namespace SpatialConnect.Windows.DataServices.BaseClasses
 
             if (ServiceApp.task_type == "push")
             {
-                _log.Debug("Container Push Service Created");
+                _log.Debug("push scheduled for.. " + container.name);
 
                 dataService = new RecordPushService(container);
             }
             else
             {
-                _log.Debug("Container Capture Service Created");
+                _log.Debug("pull scheduled for.. " + container.name);
 
                 dataService = new RecordCaptureService(container);
             }
 
             this.ServiceQueue.Push(dataService);
-
-            _log.Debug("SpatialContainer Service Registered with Scheduler");
 
             if (!this.IsStarted)
             {

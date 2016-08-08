@@ -37,8 +37,6 @@ namespace SpatialConnect.Windows.DataServices.Service
 
         public void Run()
         {
-            _log.Debug("SpatialContainer pull starting: " + Container.name);
-
             try
             {
                 _dataRetrievalManager = new DataRetrievalManager(this.Container);
@@ -47,7 +45,7 @@ namespace SpatialConnect.Windows.DataServices.Service
                 _dataRetrievalManager.OnDataRetrievalError += dataRetrievalManager_OnDataRetrievalError;
                 _dataRetrievalManager.OnDataRetrievalSuccess += dataRetrievalManager_OnDataRetrievalSuccess;
 
-                _log.Debug("Get Data Starting.");
+                _log.Info("pull starting for... " + Container.name);
 
                 _dataRetrievalManager.GetData();
             }
@@ -76,7 +74,7 @@ namespace SpatialConnect.Windows.DataServices.Service
                 activity.created = DateTime.Now;
                 activity.records = records.Where(p => !this.Container.PullHistory.uids.Contains(p.uid)).ToList();
 
-                _log.Info("Pull complete. [" + activity.records.Count + "/" + records.Count + "]: records were not duplicates and will be saved.");
+                _log.Info("[" + activity.records.Count + "/" + records.Count + "]: records were not duplicates and will be saved.");
 
                 this.Container.PullHistory.uids = 
                     this.Container.PullHistory.uids.Concat(activity.records.Select(p => p.uid)).ToList();
@@ -84,6 +82,8 @@ namespace SpatialConnect.Windows.DataServices.Service
                 //  write the files
                 activity.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\" + string.Format(ServiceActivity.PullFileNameFormat, activity.created.ToString("yyyyMMddhhmmss")));
                 this.Container.PullHistory.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\history.json");
+
+                _log.Info("pull complete!");
             }
             catch (Exception ex)
             {
