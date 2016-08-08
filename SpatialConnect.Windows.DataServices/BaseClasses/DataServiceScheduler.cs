@@ -136,8 +136,6 @@ namespace SpatialConnect.Windows.DataServices.BaseClasses
 
                         this.SetContainerWorking(service.Container);
 
-                        _log.Debug("Starting service run");
-
                         service.Run(ManagerWorker);
                     }
 

@@ -76,7 +76,7 @@ namespace SpatialConnect.Windows.DataServices.Service
                 activity.created = DateTime.Now;
                 activity.records = records.Where(p => !this.Container.PullHistory.uids.Contains(p.uid)).ToList();
 
-                _log.Info("[" + activity.records.Count + "] records were not duplicates and will be saved.");
+                _log.Info("Pull complete. [" + activity.records.Count + "/" + records.Count + "]: records were not duplicates and will be saved.");
 
                 this.Container.PullHistory.uids = 
                     this.Container.PullHistory.uids.Concat(activity.records.Select(p => p.uid)).ToList();
@@ -102,14 +102,6 @@ namespace SpatialConnect.Windows.DataServices.Service
 
         private void dataRetrievalManager_OnDataRetrievalSuccess(object sender, List<GeoRecord> capturedRecords)
         {
-            string msg = "SpatialContainer pull complete. Record Count: {0}";
-
-            msg = capturedRecords == null || capturedRecords.Count == 0
-                ? string.Format(msg, 0)
-                : string.Format(msg, capturedRecords.Count);
-
-            _log.Debug(msg);
-
             _dataRetrievalManager.OnDataRetrievalError -= dataRetrievalManager_OnDataRetrievalError;
             _dataRetrievalManager.OnDataRetrievalSuccess -= dataRetrievalManager_OnDataRetrievalSuccess;
 
