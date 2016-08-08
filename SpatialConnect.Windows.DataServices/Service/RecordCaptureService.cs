@@ -76,6 +76,8 @@ namespace SpatialConnect.Windows.DataServices.Service
                 activity.created = DateTime.Now;
                 activity.records = records.Where(p => !this.Container.PullHistory.uids.Contains(p.uid)).ToList();
 
+                _log.Info("[" + activity.records.Count + "] records were not duplicates and will be saved.");
+
                 this.Container.PullHistory.uids = 
                     this.Container.PullHistory.uids.Concat(activity.records.Select(p => p.uid)).ToList();
 
