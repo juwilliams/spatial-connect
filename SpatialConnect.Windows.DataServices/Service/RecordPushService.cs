@@ -152,6 +152,7 @@ namespace SpatialConnect.Windows.DataServices.Service
                 //  save the history
                 this.Container.PushHistory.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\push\\history.json");
                 this.Container.Relationships.Write(ServiceApp.app_path + "\\" + (!string.IsNullOrEmpty(this.Container.relationships_dir) ? this.Container.relationships_dir : this.Container.name) + "\\relationships.json");
+                this.Container.Cache.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\push\\cache.json");
 
                 _log.Info("push complete!");
             }

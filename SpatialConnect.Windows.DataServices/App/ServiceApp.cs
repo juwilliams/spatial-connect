@@ -81,6 +81,9 @@ namespace SpatialConnect.Windows.DataServices.App
                 container.PullHistory = DataUtil.GetObjFromJson<History>(ServiceApp.app_path + "\\" + c + "\\pull\\history.json");
                 container.PushHistory = DataUtil.GetObjFromJson<History>(ServiceApp.app_path + "\\" + c + "\\push\\history.json");
 
+                container.Cache =
+                    DataUtil.GetObjFromJson<Cache>(ServiceApp.app_path + "\\" + c + "\\cache.json");
+
                 container.Relationships = 
                     DataUtil.GetObjFromJson<Relationships>(ServiceApp.app_path + "\\" + (!string.IsNullOrEmpty(container.relationships_dir) ? container.relationships_dir : c) + "\\relationships.json");
 

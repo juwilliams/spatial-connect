@@ -50,5 +50,8 @@ namespace SpatialConnect.Entity
 
         [JsonIgnore]
         public Relationships Relationships { get; set; }
+
+        [JsonIgnore]
+        public Cache Cache { get; set; }
     }
 }
