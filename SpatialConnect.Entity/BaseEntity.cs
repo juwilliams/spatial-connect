@@ -5,6 +5,8 @@ namespace SpatialConnect.Entity
 {
     public abstract class BaseEntity
     {
+        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         [JsonProperty("py/object")]
         public string py_object { get; set; }
 
@@ -13,6 +15,8 @@ namespace SpatialConnect.Entity
             string json = JsonConvert.SerializeObject(this);
 
             File.WriteAllText(path, json);
+
+            _log.Debug("file written: " + path);
         }
     }
 }
