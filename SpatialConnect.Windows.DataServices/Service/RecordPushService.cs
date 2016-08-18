@@ -52,7 +52,7 @@ namespace SpatialConnect.Windows.DataServices.Service
                 if (this.Container.update_only && 
                         this.Container.use_relationships && !this.Container.Relationships.keys.Any())
                 {
-                    this.AfterRun(null);
+                    this.AfterRun(new List<GeoRecord>());
 
                     return;
                 }
