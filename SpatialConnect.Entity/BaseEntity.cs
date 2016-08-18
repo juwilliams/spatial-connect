@@ -15,8 +15,6 @@ namespace SpatialConnect.Entity
             string json = JsonConvert.SerializeObject(this);
 
             File.WriteAllText(path, json);
-
-            _log.Debug("file written: " + path + "\r\n" + json);
         }
     }
 }

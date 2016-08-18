@@ -45,7 +45,7 @@ namespace SpatialConnect.Windows.DataServices.Service
         {
             try
             {
-                _log.Info("push starting for... " + Container.name);
+                _log.Info("push starting for... " + this.Container.name);
 
                 //  if this container is updating only, and we dont have any established relationship keys, no need to push
                 //  populate data ids if relationships are being used
@@ -152,7 +152,7 @@ namespace SpatialConnect.Windows.DataServices.Service
                 //  save the history
                 this.Container.PushHistory.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\push\\history.json");
                 this.Container.Relationships.Write(ServiceApp.app_path + "\\" + (!string.IsNullOrEmpty(this.Container.relationships_dir) ? this.Container.relationships_dir : this.Container.name) + "\\relationships.json");
-                this.Container.Cache.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\push\\cache.json");
+                this.Container.Cache.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\cache.json");
 
                 _log.Info("push complete!");
             }
