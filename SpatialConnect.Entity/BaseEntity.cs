@@ -16,7 +16,7 @@ namespace SpatialConnect.Entity
 
             File.WriteAllText(path, json);
 
-            _log.Debug("file written: " + path);
+            _log.Debug("file written: " + path + "\r\n" + json);
         }
     }
 }
