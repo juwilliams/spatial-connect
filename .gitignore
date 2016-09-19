@@ -7,6 +7,7 @@
 # Project Specific Exclusions
 SpatialConnect.Windows.DataServices/[Bb]in/
 SpatialConnect.Entity/[Bb]in/
+SpatialConnect.*/bin/Release/*.config
 
 # Deployment Files
 **/deploy.sh
