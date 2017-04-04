@@ -175,7 +175,7 @@ namespace SpatialConnect.Windows.DataServices.Service
         {
             _log.Info("communicating with arcgis...");
 
-            SDEManager sdeManager = new SDEManager(this.Container.Config);
+            SDEManager sdeManager = new SDEManager(this.Container);
 
             UpdateResult updateResult =
                 sdeManager.UpdateSDE(this.Container.license_type,
