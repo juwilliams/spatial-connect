@@ -32,6 +32,7 @@ namespace SpatialConnect.Entity
         public int wkid { get; set; }
         public bool update_only { get; set; }
         public bool has_attachments { get; set; }
+        public bool clean_before_update { get; set; }
 
         [JsonIgnore]
         public bool working { get; set; }

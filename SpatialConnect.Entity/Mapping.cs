@@ -1,4 +1,6 @@
-﻿namespace SpatialConnect.Entity
+﻿using System.Linq;
+
+namespace SpatialConnect.Entity
 {
     public sealed class Mapping
     {
@@ -10,7 +12,7 @@
 
         public bool HasTag(string type)
         {
-            return false;
+            return tags.Split(',').Contains(type);
         }
     }
 }

@@ -138,7 +138,8 @@ namespace SpatialConnect.Windows.DataServices.Service
                         {
                             external_id = add.dataid,
                             internal_id = add.id,
-                            field_name = this.Container.key
+                            field_name = this.Container.key,
+                            uid = add.uid
                         };
 
                         this.Container.Relationships.keys.Add(key);
@@ -181,7 +182,8 @@ namespace SpatialConnect.Windows.DataServices.Service
                 sdeManager.UpdateSDE(this.Container.license_type,
                                      this.Container.name,
                                      this.Container.geometry,
-                                     this.Container.wkid, 
+                                     this.Container.wkid,
+                                     this.Container.clean_before_update,
                                      records);
 
             this.AfterRun(updateResult.Affected);
