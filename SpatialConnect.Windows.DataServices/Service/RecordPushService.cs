@@ -64,6 +64,13 @@ namespace SpatialConnect.Windows.DataServices.Service
                 //  get a list of the json files that we need to run from the /pull directory for this container
                 Pulls = Directory.GetFiles(ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\", "*.pull.json");
 
+                if (Pulls == null || Pulls.Count() < 1)
+                {
+                    this.AfterRun(new List<GeoRecord>());
+
+                    return;
+                }
+
                 //  load each file, concatentate the records
                 for (int i = 0; i <= Pulls.Length - 1; i++)
                 {
@@ -124,7 +131,7 @@ namespace SpatialConnect.Windows.DataServices.Service
                 _log.Error("error during push!");
                 _log.Error(ex.Message, ex);
 
-                this.AfterRun(null);
+                this.AfterRun(new List<GeoRecord>());
             }
         }
 
