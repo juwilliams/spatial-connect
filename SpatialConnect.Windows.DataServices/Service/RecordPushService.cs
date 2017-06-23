@@ -28,6 +28,8 @@ namespace SpatialConnect.Windows.DataServices.Service
         private static ILog _log = LogManager.GetLogger(typeof(RecordPushService));
         private BackgroundWorker _worker;
 
+        private string[] Pulls { get; set; }
+
         #endregion
 
 
@@ -60,21 +62,23 @@ namespace SpatialConnect.Windows.DataServices.Service
                 List<GeoRecord> records = new List<GeoRecord>();
 
                 //  get a list of the json files that we need to run from the /pull directory for this container
-                string[] pulls = 
-                    Directory.GetFiles(ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\", "*.pull.json");
+                Pulls = Directory.GetFiles(ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\", "*.pull.json");
 
                 //  load each file, concatentate the records
-                for (int i = 0; i <= pulls.Length - 1; i++)
+                for (int i = 0; i <= Pulls.Length - 1; i++)
                 {
-                    string pull = pulls[i];
+                    string pull = Pulls[i];
 
                     ServiceActivity activity = DataUtil.GetObjFromJson<ServiceActivity>(pull);
 
                     records = records.Concat(activity.records).ToList();
                 }
 
-                //  filter out previously pushed records
-                records = records.Where(p => !this.Container.PushHistory.uids.Contains(p.uid)).ToList();
+                //  filter out previously pushed records if this is not strictly pushing the current snapshot of records
+                if (!this.Container.clean_before_update)
+                {
+                    records = records.Where(p => !this.Container.PushHistory.uids.Contains(p.uid)).ToList();
+                }
 
                 //  populate data ids if relationships are being used
                 if (this.Container.use_relationships && this.Container.Relationships.keys.Any())
@@ -154,6 +158,12 @@ namespace SpatialConnect.Windows.DataServices.Service
                 this.Container.PushHistory.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\push\\history.json");
                 this.Container.Relationships.Write(ServiceApp.app_path + "\\" + (!string.IsNullOrEmpty(this.Container.relationships_dir) ? this.Container.relationships_dir : this.Container.name) + "\\relationships.json");
                 this.Container.Cache.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\cache.json");
+
+                //  archive previous pulls
+                foreach (string pull in Pulls)
+                {
+                    File.Move(pull, ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\archive\\" + Path.GetFileName(pull));
+                }
 
                 _log.Info("push complete!");
             }
