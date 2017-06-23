@@ -86,6 +86,10 @@ namespace SpatialConnect.Windows.DataServices.Service
                 {
                     records = records.Where(p => !this.Container.PushHistory.uids.Contains(p.uid)).ToList();
                 }
+                else
+                {
+                    records = records.GroupBy(g => g.uid).Select(r => r.First()).ToList();
+                }
 
                 //  populate data ids if relationships are being used
                 if (this.Container.use_relationships && this.Container.Relationships.keys.Any())
