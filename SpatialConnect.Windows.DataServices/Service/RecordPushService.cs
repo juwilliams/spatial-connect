@@ -81,15 +81,7 @@ namespace SpatialConnect.Windows.DataServices.Service
                     records = records.Concat(activity.records).ToList();
                 }
 
-                //  filter out previously pushed records if this is not strictly pushing the current snapshot of records
-                if (!this.Container.clean_before_update)
-                {
-                    records = records.Where(p => !this.Container.PushHistory.uids.Contains(p.uid)).ToList();
-                }
-                else
-                {
-                    records = records.GroupBy(g => g.uid).Select(r => r.First()).ToList();
-                }
+                records = records.Where(p => !this.Container.PushHistory.uids.Contains(p.uid)).ToList();
 
                 //  populate data ids if relationships are being used
                 if (this.Container.use_relationships && this.Container.Relationships.keys.Any())
@@ -173,7 +165,21 @@ namespace SpatialConnect.Windows.DataServices.Service
                 //  archive previous pulls
                 foreach (string pull in Pulls)
                 {
-                    File.Move(pull, ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\archive\\" + Path.GetFileName(pull));
+                    try
+                    {
+                        string nextPath = ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\archive\\" + Path.GetFileName(pull);
+
+                        if (File.Exists(nextPath))
+                        {
+                            File.Delete(nextPath);
+                        }
+
+                        File.Move(pull, nextPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Error(ex.Message, ex);
+                    }
                 }
 
                 _log.Info("push complete!");
@@ -204,7 +210,6 @@ namespace SpatialConnect.Windows.DataServices.Service
                                      this.Container.name,
                                      this.Container.geometry,
                                      this.Container.wkid,
-                                     this.Container.clean_before_update,
                                      records);
 
             this.AfterRun(updateResult.Affected);

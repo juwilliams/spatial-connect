@@ -73,21 +73,14 @@ namespace SpatialConnect.Windows.DataServices.Service
                 ServiceActivity activity = new ServiceActivity();
                 activity.created = DateTime.Now;
 
-                //  we only need to keep track of record history if we intend on using deltas for updates
-                if (!this.Container.clean_before_update) {
-                    activity.records = records.Where(p => !this.Container.PullHistory.uids.Contains(p.uid)).ToList();
+                activity.records = records.Where(p => !this.Container.PullHistory.uids.Contains(p.uid)).ToList();
 
-                    _log.Info("[" + activity.records.Count + "/" + records.Count + "]: records were not duplicates and will be saved.");
+                _log.Info("[" + activity.records.Count + "/" + records.Count + "]: records were not duplicates and will be saved.");
 
-                    this.Container.PullHistory.uids =
-                        this.Container.PullHistory.uids.Concat(activity.records.Select(p => p.uid)).ToList();
+                this.Container.PullHistory.uids =
+                    this.Container.PullHistory.uids.Concat(activity.records.Select(p => p.uid)).ToList();
 
-                    this.Container.PullHistory.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\history.json");
-                }
-                else
-                {
-                    activity.records = records;
-                }
+                this.Container.PullHistory.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\history.json");
 
                 //  write the files
                 activity.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\" + string.Format(ServiceActivity.PullFileNameFormat, activity.created.ToString("yyyyMMddhhmmss")));
