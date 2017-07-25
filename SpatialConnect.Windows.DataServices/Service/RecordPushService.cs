@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using SpatialConnect.Entity;
 using SpatialConnect.Windows.DataServices.App;
 using SpatialConnect.Windows.DataServices.BaseClasses;
+using SpatialConnect.Windows.DataServices.Constants;
 using SpatialConnect.Windows.DataServices.Interface;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,8 @@ namespace SpatialConnect.Windows.DataServices.Service
         private BackgroundWorker _worker;
 
         private string[] Pulls { get; set; }
+
+        private int expectedResultsCount = 0;
 
         #endregion
 
@@ -82,6 +85,15 @@ namespace SpatialConnect.Windows.DataServices.Service
                 }
 
                 records = records.Where(p => !this.Container.PushHistory.uids.Contains(p.uid)).ToList();
+                if (records.Count() == 0)
+                {
+                    this.AfterRun(new List<GeoRecord>());
+
+                    return;
+                }
+
+                //  set the number of records we expect to push so that we know whether or not to archive the pull.json files
+                expectedResultsCount = records.Count();
 
                 //  populate data ids if relationships are being used
                 if (this.Container.use_relationships && this.Container.Relationships.keys.Any())
@@ -90,7 +102,16 @@ namespace SpatialConnect.Windows.DataServices.Service
 
                     foreach (GeoRecord relation in related)
                     {
-                        relation.dataid = this.Container.Relationships.keys.FirstOrDefault(p => p.internal_id == relation.id).external_id;
+                        //  set the appropriate external system id field depending on the destination system
+                        if (this.Container.destination.ToLower() == ContainerConstants.Destination.WEBEOC)
+                        {
+                            relation.dataid = this.Container.Relationships.keys.FirstOrDefault(p => p.internal_id == relation.id).external_id;
+                        }
+                        else
+                        {
+                            relation.objectid = this.Container.Relationships.keys.FirstOrDefault(p => p.internal_id == relation.id).external_id;
+                        }
+
                         relation.was_update = true;
                     }
 
@@ -104,13 +125,13 @@ namespace SpatialConnect.Windows.DataServices.Service
                 //  push the concatenated record lists
                 switch (this.Container.destination.ToLower())
                 {
-                    case "webeoc":
+                    case ContainerConstants.Destination.WEBEOC:
                         {
                             PushToWebEOC(records);
 
                             break;
                         }
-                    case "arcgis":
+                    case ContainerConstants.Destination.ARCGIS:
                         {
                             PushToArcGIS(records);
 
@@ -143,7 +164,7 @@ namespace SpatialConnect.Windows.DataServices.Service
                     {
                         Key key = new Key()
                         {
-                            external_id = add.dataid,
+                            external_id = this.Container.destination.ToLower() == ContainerConstants.Destination.WEBEOC ? add.dataid : add.objectid,
                             internal_id = add.id,
                             field_name = this.Container.key,
                             uid = add.uid
@@ -163,22 +184,27 @@ namespace SpatialConnect.Windows.DataServices.Service
                 this.Container.Cache.Write(ServiceApp.app_path + "\\" + this.Container.name + "\\cache.json");
 
                 //  archive previous pulls
-                foreach (string pull in Pulls)
+                if (expectedResultsCount == results.Count())
                 {
-                    try
-                    {
-                        string nextPath = ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\archive\\" + Path.GetFileName(pull);
+                    _log.Info("pushed all expected records successfully, archiving pull//*.pull.json files..");
 
-                        if (File.Exists(nextPath))
+                    foreach (string pull in Pulls)
+                    {
+                        try
                         {
-                            File.Delete(nextPath);
-                        }
+                            string nextPath = ServiceApp.app_path + "\\" + this.Container.name + "\\pull\\archive\\" + Path.GetFileName(pull);
 
-                        File.Move(pull, nextPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.Error(ex.Message, ex);
+                            if (File.Exists(nextPath))
+                            {
+                                File.Delete(nextPath);
+                            }
+
+                            File.Move(pull, nextPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            _log.Error(ex.Message, ex);
+                        }
                     }
                 }
 

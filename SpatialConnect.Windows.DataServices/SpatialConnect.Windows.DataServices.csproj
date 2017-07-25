@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="BaseClasses\DataServiceScheduler.cs" />
     <Compile Include="BaseClasses\DataServiceManagerBase.cs" />
+    <Compile Include="Constants\ContainerConstants.cs" />
     <Compile Include="Interface\IDataService.cs" />
     <Compile Include="App\ServiceApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -114,9 +115,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Constants\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
